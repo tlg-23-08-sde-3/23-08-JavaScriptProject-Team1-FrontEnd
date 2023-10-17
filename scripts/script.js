@@ -6,7 +6,7 @@ const jobsListContainer = document.getElementById("jobs-list-container");
 async function fetchJobs() {
    const fetchedJobs = await fetch(apiUrl);
    const data = await fetchedJobs.json();
-   jobs = data.results;
+   const jobs = data.results;
    console.log(jobs);
 
    jobs.forEach((job) => {
@@ -18,7 +18,7 @@ async function fetchJobs() {
 
       cardDiv.dataset.jobID = job.id;
 
-      // trimmer description p element
+      // trimmed description p element
       const cardText = document.createElement("p");
       cardText.classList.add("card-text");
 
@@ -48,10 +48,8 @@ jobsListContainer.addEventListener("click", async (e) => {
 
    const job = jobs.find((job) => {
       console.log(job.id, target.id);
-      return (job.id === Number(target.id));
+      return job.id === Number(target.id);
    });
-
-
 
    const jobViewContainer = document.getElementById("jobs-view-conainer");
 
@@ -63,7 +61,7 @@ jobsListContainer.addEventListener("click", async (e) => {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'">Apply</button>
+   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
 
    `;
    jobViewContainer.innerHTML = "";
