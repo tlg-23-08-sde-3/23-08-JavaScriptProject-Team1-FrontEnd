@@ -1,0 +1,55 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.job-posts {
+    display: flex;
+    justify-content: center;
+    margin-right: 20px; 
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+.nav-list {
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+.card {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.jobs-view-conainer {
+    position: fixed;
+    
+    right: 50px; 
+    /* scrolling */
+    height: 100%; 
+    overflow-y: auto; 
+    
+  }
+
+  .jobs-view-conainer .card {
+    padding: 30px;
+  }
+
+.navbar {
+    
+    margin: 0 auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+
+.job-posts {
+    margin-top: 80px;
+}
