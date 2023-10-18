@@ -7,7 +7,8 @@ async function fetchJobs() {
    const fetchedJobs = await fetch(apiUrl);
    const data = await fetchedJobs.json();
    const jobs = data.results;
-   console.log(jobs);
+   
+
 
    jobs.forEach((job) => {
       const cardDiv = Object.assign(document.createElement("div"), {
@@ -35,6 +36,7 @@ async function fetchJobs() {
       jobsListContainer.appendChild(cardDiv);
    });
 
+   //pagination handling
    const itemsPerPage = 5;
 
    let currentPage = 1;
@@ -49,7 +51,8 @@ async function fetchJobs() {
       jobCards.hide();
       jobCards.slice(start, end).show();
       // calling function to display first job
-      await displayFirstJobDetails(jobCards[0].id);
+
+      await displayFirstJobDetails(jobCards.slice(start, end)[0].id);
       // add "active" class for highlight color"
    }
 
@@ -74,7 +77,6 @@ async function fetchJobs() {
          showPage(currentPage);
       }
 
-   
       // check for active number, remove active class and add for current page number
       const pageItems = document.querySelectorAll(".pagination .page-item");
 
@@ -95,10 +97,10 @@ async function displayFirstJobDetails(id) {
    const fetchedJobs = await fetch(apiUrl);
    const data = await fetchedJobs.json();
    const jobs = data.results;
-   console.log(jobs);
+
 
    const job = jobs.find((job) => {
-      console.log(job.id);
+      
       return job.id === Number(id);
    });
 
@@ -127,10 +129,10 @@ jobsListContainer.addEventListener("click", async (e) => {
    const fetchedJobs = await fetch(apiUrl);
    const data = await fetchedJobs.json();
    const jobs = data.results;
-   console.log(jobs);
+   
 
    const job = jobs.find((job) => {
-      console.log(job.id, target.id);
+      
       return job.id === Number(target.id);
    });
 
