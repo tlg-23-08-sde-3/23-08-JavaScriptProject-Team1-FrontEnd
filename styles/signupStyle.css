@@ -8,3 +8,7 @@ body {
 h2 {
     margin-bottom: 20px;
 }
+
+.form-control {
+    text-align: center;
+}
