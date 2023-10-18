@@ -1,20 +1,19 @@
-const apiUrl =
-   "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
+// const apiUrl =
+//    "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
+
+const apiUrl = "http://localhost:3000/job";
 
 const jobsListContainer = document.getElementById("jobs-list-container");
 
 async function fetchJobs() {
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
-   
-
+   const jobs = await fetchedJobs.json();
 
    jobs.forEach((job) => {
       const cardDiv = Object.assign(document.createElement("div"), {
          classList: "card",
          style: "width: 50rem",
-         id: job.id,
+         id: job._id,
       });
 
       cardDiv.dataset.jobID = job.id;
@@ -40,6 +39,17 @@ async function fetchJobs() {
    const itemsPerPage = 5;
 
    let currentPage = 1;
+
+   // Calculate the number of total pages based on the number of jobs
+   const totalPages = Math.ceil(jobs.length / itemsPerPage);
+
+   // Create the pagination links dynamically
+   for (let i = 1; i <= totalPages; i++) {
+      const pageLink = document.createElement("li");
+      pageLink.classList.add("page-item");
+      pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+      document.querySelector(".pagination").appendChild(pageLink);
+   }
 
    // jobs on current page
    async function showPage(page) {
@@ -85,7 +95,7 @@ async function fetchJobs() {
       });
 
       const secondPageItem = document.querySelector(
-         `.pagination .page-item:nth-child(${currentPage + 1})`
+         `.pagination .page-item:nth-child(${currentPage })`
       );
 
       secondPageItem.classList.add("active");
@@ -95,13 +105,12 @@ async function fetchJobs() {
 // display first job on page in details on right
 async function displayFirstJobDetails(id) {
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
+   const jobs = await fetchedJobs.json();
 
+   // const jobs = data.results;
 
    const job = jobs.find((job) => {
-      
-      return job.id === Number(id);
+      return job._id.trim() === id.trim(); // white space though length same
    });
 
    const jobViewContainer = document.getElementById("jobs-view-conainer");
@@ -114,7 +123,7 @@ async function displayFirstJobDetails(id) {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
+   <button type="button" class="btn btn-primary" onclick="window.location.href=#" target="_blank" rel="noopener noreferrer">Apply</button> 
 
    `;
    jobViewContainer.innerHTML = "";
@@ -127,13 +136,11 @@ jobsListContainer.addEventListener("click", async (e) => {
    const target = e.target.closest(".card");
 
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
-   
+   const jobs = await fetchedJobs.json();
+   // const jobs = data.results;
 
    const job = jobs.find((job) => {
-      
-      return job.id === Number(target.id);
+      return job._id.trim() === target.id.trim();
    });
 
    const jobViewContainer = document.getElementById("jobs-view-conainer");
@@ -146,7 +153,7 @@ jobsListContainer.addEventListener("click", async (e) => {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
+   <button type="button" class="btn btn-primary" onclick="window.location.href=#" target="_blank" rel="noopener noreferrer">Apply</button>
 
    `;
    jobViewContainer.innerHTML = "";
