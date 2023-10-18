@@ -34,6 +34,89 @@ async function fetchJobs() {
 
       jobsListContainer.appendChild(cardDiv);
    });
+
+   const itemsPerPage = 5;
+
+   let currentPage = 1;
+
+   // jobs on current page
+   async function showPage(page) {
+      const jobCards = $(".card");
+
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+
+      jobCards.hide();
+      jobCards.slice(start, end).show();
+      // calling function to display first job
+      await displayFirstJobDetails(jobCards[0].id);
+      // add "active" class for highlight color"
+   }
+
+   showPage(currentPage);
+
+   // Handle pagination click events
+   $(".pagination").on("click", "a.page-link", function (e) {
+      e.preventDefault();
+      const text = $(this).text();
+      if (text === "Previous") {
+         if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+         }
+      } else if (text === "Next") {
+         if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
+            currentPage++;
+            showPage(currentPage);
+         }
+      } else {
+         currentPage = parseInt(text);
+         showPage(currentPage);
+      }
+
+   
+      // check for active number, remove active class and add for current page number
+      const pageItems = document.querySelectorAll(".pagination .page-item");
+
+      pageItems.forEach((pageItem) => {
+         pageItem.classList.remove("active");
+      });
+
+      const secondPageItem = document.querySelector(
+         `.pagination .page-item:nth-child(${currentPage + 1})`
+      );
+
+      secondPageItem.classList.add("active");
+   });
+}
+
+// display first job on page in details on right
+async function displayFirstJobDetails(id) {
+   const fetchedJobs = await fetch(apiUrl);
+   const data = await fetchedJobs.json();
+   const jobs = data.results;
+   console.log(jobs);
+
+   const job = jobs.find((job) => {
+      console.log(job.id);
+      return job.id === Number(id);
+   });
+
+   const jobViewContainer = document.getElementById("jobs-view-conainer");
+
+   const singleJobView = Object.assign(document.createElement("div"), {
+      classList: "card",
+      style: "width: 50rem",
+   });
+
+   singleJobView.innerHTML = `
+   <h5>${job.name}</h5>
+   <p>${job.contents}</p>
+   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
+
+   `;
+   jobViewContainer.innerHTML = "";
+   jobViewContainer.appendChild(singleJobView);
 }
 
 jobsListContainer.addEventListener("click", async (e) => {
