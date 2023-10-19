@@ -1,6 +1,8 @@
 // const apiUrl =
 //    "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
 
+
+
 const apiUrl = "http://localhost:3000/job";
 
 const jobsListContainer = document.getElementById("jobs-list-container");
@@ -22,6 +24,12 @@ async function fetchJobs() {
       // trimmed description p element
       const cardText = document.createElement("p");
       cardText.classList.add("card-text");
+      const favLink = document.createElement("a");
+      favLink.id = `fav-jobId-${job._id}`;
+      const favImg = document.createElement("img");
+      favImg.src = "star.png";
+      favImg.style = "width: 20px; height: 20px";
+      favLink.append(favImg);
 
       const slicedJobDescription = job.contents.slice(0, 200);
       cardText.innerHTML = `
@@ -37,6 +45,7 @@ async function fetchJobs() {
     </div>
       `;
       cardDiv.querySelector(".card-body").appendChild(cardText);
+      cardDiv.querySelector(".card-body").appendChild(favLink);
 
       jobsListContainer.appendChild(cardDiv);
    });
@@ -142,6 +151,38 @@ async function displayFirstJobDetails(id) {
 
 jobsListContainer.addEventListener("click", async (e) => {
    e.preventDefault();
+
+   if (e.target.tagName === "IMG") {
+      console.log(e.target.parentNode.id.split("-")[2]);
+      console.log(localStorage.getItem("candidate"));
+
+      const jobId = e.target.parentNode.id.split("-")[2];
+      const email = localStorage.getItem("candidate");
+      const token = localStorage.getItem("token");
+
+      if (email && jobId) {
+         fetch("http://localhost:3000/candidate/favorites", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email, jobId }),
+         })
+            .then((response) => {
+               if (response.ok) {
+                  alert("Added to favorites list!");
+               } else {
+                  alert("Already Favorited!");
+               }
+            })
+            .catch((error) => {
+               console.error("Error:", error);
+            });
+      } else {
+         alert("Please sign in to favorite jobs!");
+      }
+   }
 
    const target = e.target.closest(".card");
 
@@ -320,3 +361,22 @@ document
    });
 
 fetchJobs();
+
+if (localStorage.getItem("candidate")) {
+   console.log(localStorage.getItem("candidate"));
+   document.getElementById("signin-link").innerText =
+      localStorage.getItem("candidate");
+
+   document.getElementById("signup-lst").innerHTML = "";
+   const signOutElement = document.createElement("li");
+   signOutElement.classList.add("nav-item");
+   signOutElement.id = "signout-lst";
+   signOutElement.innerHTML = `
+   <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
+   `;
+   document.getElementById("nav-items-lst").append(signOutElement);
+}
+
+document.getElementById("favorites-link").addEventListener("click", (e) => {
+   
+});
