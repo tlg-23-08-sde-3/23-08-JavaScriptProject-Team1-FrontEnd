@@ -1,4 +1,5 @@
-const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "https://employmentdecoderapi.onrender.com/";
+const baseAPI = "http://localhost:3000/";
 const extURL = "company/signup";
 
 document.getElementById("companySignUpForm").addEventListener("submit", (event) => {

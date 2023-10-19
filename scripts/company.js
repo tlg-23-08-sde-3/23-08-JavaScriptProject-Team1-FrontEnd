@@ -28,7 +28,7 @@ async function fetchCompany() {
 }
 
 async function fetchJobs() {
-    const fetchedJobs = await fetch(baseAPI + jobURLExt);
+    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
     const jobs = await fetchedJobs.json();
 
     jobs.forEach((job) => {
@@ -111,7 +111,7 @@ async function fetchJobs() {
 
 // display first job on page in details on right
 async function displayFirstJobDetails(id) {
-    const fetchedJobs = await fetch(baseAPI + jobURLExt);
+    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
     const data = await fetchedJobs.json();
     const jobs = data;
 

@@ -17,11 +17,11 @@
         <form id="jobCreateForm">
             <div class="mb-3">
                 <label for="name" class="form-label">Job Title</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter Job Title" />
+                <input type="text" class="form-control" id="name" placeholder="Enter Job Title" required />
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Job Location</label>
-                <input type="text" class="form-control" id="location" placeholder="Enter Job Location" />
+                <input type="text" class="form-control" id="location" placeholder="Enter Job Location" required />
             </div>
             <div class="mb-3">
                 <label for="keywords" class="form-label">Primary Location</label>
@@ -29,16 +29,22 @@
                 <div class="form-text">Separate keywords by commas.</div>
             </div>
             <div class="mb-3">
-                <label for="pay" class="form-label">Password</label>
+                <label for="pay" class="form-label">Salary</label>
                 <input type="text" class="form-control" id="pay" placeholder="Enter Job Salary" />
             </div>
             <div class="mb-3">
-                <label for="contents" class="form-label">Confirm Password</label>
-                <input type="text" class="form-control" id="contents" placeholder="Enter Job Description" />
-                <textarea id="contents" class="form-control" rows="10"></textarea>
+                <label for="contents" class="form-label">Job Description</label>
+                <!-- <input type="text" class="form-control" id="contents" placeholder="Enter Job Description" /> -->
+                <textarea
+                    id="contents"
+                    class="form-control"
+                    rows="10"
+                    placeholder="Enter Job Description"
+                    required
+                ></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
         </form>
-        <script src="../scripts/companySignup.js"></script>
+        <script src="../scripts/jobForm.js"></script>
     </body>
 </html>
