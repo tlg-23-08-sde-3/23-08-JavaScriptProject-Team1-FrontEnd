@@ -1,8 +1,6 @@
 // const apiUrl =
 //    "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
 
-
-
 const apiUrl = "http://localhost:3000/job";
 
 const jobsListContainer = document.getElementById("jobs-list-container");
@@ -212,14 +210,12 @@ jobsListContainer.addEventListener("click", async (e) => {
    jobViewContainer.appendChild(singleJobView);
 });
 
-
 // search jobs
 document
    .getElementById("search-jobs-form")
    .addEventListener("submit", async (e) => {
       e.preventDefault();
       console.log("triggwered");
-
 
       const jobRoleInput = document.getElementById("role-search-input").value;
       const locationInput = document.getElementById(
@@ -366,7 +362,6 @@ document
 
 fetchJobs();
 
-
 // modify sign/sign up links
 if (localStorage.getItem("candidate")) {
    console.log(localStorage.getItem("candidate"));
@@ -383,6 +378,40 @@ if (localStorage.getItem("candidate")) {
    document.getElementById("nav-items-lst").append(signOutElement);
 }
 
-document.getElementById("favorites-link").addEventListener("click", (e) => {
-   //todo
-});
+// ---------------------------------------------------------Favorites---------------------------------------------------
+
+document
+   .getElementById("favorites-link")
+   .addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = localStorage.getItem("candidate");
+      const token = localStorage.getItem("token");
+
+      // call fetch here
+
+      try {
+         const temp = await fetch(
+            `http://localhost:3000/candidate/favorites/${email}`, // middleware check for token
+            {
+               method: "GET",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         );
+
+         const res = await temp.json();
+         if (
+            res.message === "No Token Provided" ||
+            res.message === "Invalid Token"
+         ) {
+            alert("Please login to view favorites (Invalid Token!)");
+            return;
+         }
+         window.location.href = "./pages/favorites.html"; // this page will run script to load favorite jobs and render to HTML
+      } catch (error) {
+         console.log("error here");
+         alert(error);
+      }
+   });
