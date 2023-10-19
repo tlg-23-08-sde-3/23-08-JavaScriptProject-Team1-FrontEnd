@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="../styles/signupStyle.css" />
     <body>
-        <h2>Sign Up</h2>
+        <h2>Employer Sign Up</h2>
         <form id="companySignUpForm">
             <div class="mb-3">
                 <label for="name" class="form-label">Company Name</label>
@@ -35,7 +35,11 @@
                 <label for="passwordConfirm" class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" id="passwordConfirm" placeholder="Enter password again" />
             </div>
-            <button type="submit" class="btn btn-primary">Create Account</button>
+            <div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <a class="btn btn-primary" href="./signinCompany.html">Sign In</a>
+                <a class="btn btn-primary" href="../index.html">Cancel</a>
+            </div>
         </form>
         <script src="../scripts/companySignup.js"></script>
     </body>
