@@ -6,12 +6,6 @@ document.getElementById("companySignUpForm").addEventListener("submit", (event) 
     event.preventDefault(); // Prevent the default form submission
 
     const inputFields = companySignUpForm.querySelectorAll("input");
-    const compData = companySignUpForm;
-
-    //  if (companySignUpForm.password != companySignUpForm.passwordCompare) {
-    //      alert("Sign Up Failed, passwords do not match!");
-    //      throw new Error("Sign Up Failed");
-    //  }
 
     const companyData = {};
 
@@ -24,6 +18,11 @@ document.getElementById("companySignUpForm").addEventListener("submit", (event) 
         }
     });
 
+    if (companyData.password !== companyData.passwordConfirm) {
+        alert("Sign Up Failed, passwords do not match!");
+        throw new Error("Sign Up Failed");
+    }
+
     companySignUpForm.reset();
 
     fetch(baseAPI + extURL, {
@@ -35,6 +34,7 @@ document.getElementById("companySignUpForm").addEventListener("submit", (event) 
     })
         .then((response) => {
             if (response.ok) {
+                location.assign("../pages/company.html");
                 return response.json();
             } else {
                 alert("Sign Up Failed, please try again!");
