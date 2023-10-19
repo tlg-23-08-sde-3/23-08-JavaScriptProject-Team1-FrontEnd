@@ -2,7 +2,7 @@
 const baseAPI = "http://localhost:3000/";
 const extURL = "job";
 
-const companyIdValue = localStorage.getItem("_id");
+const companyId = localStorage.getItem("companyId");
 
 document.getElementById("jobCreateForm").addEventListener("submit", (event) => {
     event.preventDefault(); // Prevent the default form submission
@@ -26,7 +26,7 @@ document.getElementById("jobCreateForm").addEventListener("submit", (event) => {
         }
     });
 
-    jobData["companyId"] = companyIdValue;
+    jobData["companyId"] = companyId;
 
     fetch(baseAPI + extURL, {
         method: "POST",

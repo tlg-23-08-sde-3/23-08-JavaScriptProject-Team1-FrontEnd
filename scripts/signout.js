@@ -15,14 +15,14 @@ function signout() {
             localStorage.removeItem("token");
             localStorage.removeItem("candidate");
 
-            window.location.reload();
+            location.assign("../index.html");
         }
         if (localStorage.getItem("token") && localStorage.getItem("companyEmail")) {
             localStorage.removeItem("token");
             localStorage.removeItem("companyEmail");
             localStorage.removeItem("companyId");
 
-            window.location.reload();
+            location.assign("../index.html");
         }
     } catch (error) {
         alert(error);

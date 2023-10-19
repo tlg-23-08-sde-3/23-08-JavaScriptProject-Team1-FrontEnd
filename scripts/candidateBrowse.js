@@ -4,14 +4,15 @@ const jobURLExt = "job";
 const compURLExt = "company/email/";
 
 const companyViewContainer = document.getElementById("company-view-container");
-const jobsListContainer = document.getElementById("jobs-list-container");
-const jobViewContainer = document.getElementById("job-detail-container");
+const candidatesListContainer = document.getElementById("candidates-list-container");
+const candidateViewContainer = document.getElementById("candidate-detail-container");
 const companyDisplay = document.getElementById("companyDisplay");
 const companySignin = document.getElementById("compSigninLink");
 const companySignup = document.getElementById("compSignupLink");
 
 const companyId = localStorage.getItem("companyId");
 const companyEmail = localStorage.getItem("companyEmail");
+const token = localStorage.getItem("token");
 
 async function fetchCompany() {
     const fullCompanyURL = baseAPI + compURLExt + companyEmail;
@@ -29,41 +30,45 @@ async function fetchCompany() {
     companyDisplay.append(Object.assign(document.createElement("hr")));
 }
 
-async function fetchJobs() {
-    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
-    const jobs = await fetchedJobs.json();
-
-    jobs.forEach((job) => {
+async function fetchCandidates() {
+    const fetchedCandidates = await fetch(baseAPI + "candidate", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const candidates = await fetchedCandidates.json();
+    console.log(candidates);
+    candidates.forEach((candidate) => {
         const cardDiv = Object.assign(document.createElement("div"), {
             classList: "card",
             style: "width: 50rem",
-            _id: job._id,
+            _id: candidate._id,
         });
 
-        cardDiv.dataset.jobID = job._id;
+        cardDiv.dataset.candidateID = candidate._id;
 
-        // trimmed description p element
         const cardText = document.createElement("p");
         cardText.classList.add("card-text");
 
-        const slicedJobDescription = job.contents.slice(0, 200);
-        cardText.innerHTML = slicedJobDescription;
-
         cardText.innerHTML = `
-        <p>Pay: ${job.pay}</p>
-        <p>Location: ${job.location}</p>
-        <h6>Description</h6>
-         <p>${slicedJobDescription}</p>
+        <p>${candidate.city}, ${candidate.state}</p>
+        <hr />
+        <h6>Skills</h6>
+        <p>${candidate.skills}</p>
       `;
 
         cardDiv.innerHTML = `
       <div class="card-body">
-      <h5 class="card-title">${job.name}</h5>
+      <h5 class="card-title">${candidate.firstName} ${candidate.lastName}</h5>
+      <p>${candidate.email}</p>
+      <hr />
     </div>
       `;
         cardDiv.querySelector(".card-body").appendChild(cardText);
 
-        jobsListContainer.appendChild(cardDiv);
+        candidatesListContainer.appendChild(cardDiv);
     });
 
     //pagination handling
@@ -72,7 +77,7 @@ async function fetchJobs() {
     let currentPage = 1;
 
     // Calculate the number of total pages based on the number of jobs
-    const totalPages = Math.ceil(jobs.length / itemsPerPage);
+    const totalPages = Math.ceil(candidates.length / itemsPerPage);
 
     // Create the pagination links dynamically
     for (let i = 1; i <= totalPages; i++) {
@@ -88,15 +93,15 @@ async function fetchJobs() {
 
     // jobs on current page
     async function showPage(page) {
-        const jobCards = $(".card");
+        const candidateCards = $(".card");
 
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        jobCards.hide();
-        jobCards.slice(start, end).show();
+        candidateCards.hide();
+        candidateCards.slice(start, end).show();
         // calling function to display first job
-        await displayFirstJobDetails(jobCards[0].id);
+        await displayFirstJobDetails(candidateCards[0].id);
         // add "active" class for highlight color"
     }
 
@@ -136,59 +141,55 @@ async function fetchJobs() {
 
 // display first job on page in details on right
 async function displayFirstJobDetails(id) {
-    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
-    const data = await fetchedJobs.json();
-    const jobs = data;
+    const fetchedCandidates = await fetch(baseAPI + "candidate");
+    const candidates = await fetchedCandidates.json();
 
-    const job = jobs[0];
+    const candidate = candidates[0];
 
-    const singleJobView = Object.assign(document.createElement("div"), {
+    const singleCandidateView = Object.assign(document.createElement("div"), {
         classList: "card",
         style: "width: 50rem",
     });
 
-    singleJobView.innerHTML = `
-   <h5>${job.name}</h5>
-   <p>Pay: ${job.pay}</p>
-   <p>Location: ${job.location}</p>
-   <h6>Description</h6>
-   <p>${job.contents}</p>
+    singleCandidateView.innerHTML = `
+    <p>${candidate.city}, ${candidate.state}</p>
+    <hr />
+    <h6>Skills</h6>
+    <p>${candidate.skills}</p>
    `;
-    jobViewContainer.innerHTML = "";
-    jobViewContainer.appendChild(singleJobView);
+    candidateViewContainer.innerHTML = "";
+    candidateViewContainer.appendChild(singleCandidateView);
 }
 
-jobsListContainer.addEventListener("click", async (e) => {
+candidatesListContainer.addEventListener("click", async (e) => {
     e.preventDefault();
 
     const target = e.target.closest(".card");
 
-    const fetchedJobs = await fetch(baseAPI + jobURLExt);
-    const data = await fetchedJobs.json();
-    const jobs = data;
+    const fetchedCandidates = await fetch(baseAPI + "candidate");
+    const candidates = await fetchedCandidates.json();
 
-    const job = jobs.find((job) => {
-        return job._id === target._id;
+    const candidate = candidates.find((candidate) => {
+        return candidate._id === target._id;
     });
 
-    const singleJobView = Object.assign(document.createElement("div"), {
+    const singleCandidateView = Object.assign(document.createElement("div"), {
         classList: "card",
         style: "width: 50rem",
     });
 
-    singleJobView.innerHTML = `
-    <h5>Title: ${job.name}</h5>
-    <h6>Description</h6>
-    <p>${job.contents}</p>
-    <p>Location: ${job.location}</p>
-
+    singleCandidateView.innerHTML = `
+    <p>${candidate.city}, ${candidate.state}</p>
+    <hr />
+    <h6>Skills</h6>
+    <p>${candidate.skills}</p>
    `;
-    jobViewContainer.innerHTML = "";
-    jobViewContainer.appendChild(singleJobView);
+    candidateViewContainer.innerHTML = "";
+    candidateViewContainer.appendChild(singleCandidateView);
 });
 
 fetchCompany();
-fetchJobs();
+fetchCandidates();
 
 if (companyEmail && companyId) {
     companySignin.innerText = companyEmail;
