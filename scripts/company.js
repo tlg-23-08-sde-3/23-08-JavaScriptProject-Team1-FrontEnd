@@ -12,194 +12,205 @@ const companySignup = document.getElementById("compSignupLink");
 
 const companyId = localStorage.getItem("companyId");
 const companyEmail = localStorage.getItem("companyEmail");
+const token = localStorage.getItem("token");
 
-async function fetchCompany() {
-    const fullCompanyURL = baseAPI + compURLExt + companyEmail;
-    const fetchedCompany = await fetch(fullCompanyURL);
-    const company = await fetchedCompany.json();
+if (!token) {
+    location.assign("./signinCompany.html");
+} else {
+    async function fetchCompany() {
+        const fullCompanyURL = baseAPI + compURLExt + companyEmail;
+        const fetchedCompany = await fetch(fullCompanyURL);
+        const company = await fetchedCompany.json();
 
-    companyDisplay.append(Object.assign(document.createElement("h4"), { textContent: company.name }));
-    companyDisplay.append(Object.assign(document.createElement("h5"), { textContent: company.email }));
-    companyDisplay.append(Object.assign(document.createElement("hr")));
-    companyDisplay.append(Object.assign(document.createElement("h6"), { textContent: "Locations" }));
-    companyDisplay.append(Object.assign(document.createElement("p"), { textContent: company.locations }));
-    companyDisplay.append(Object.assign(document.createElement("hr")));
-    companyDisplay.append(Object.assign(document.createElement("h6"), { textContent: "Industries" }));
-    companyDisplay.append(Object.assign(document.createElement("p"), { textContent: company.industries }));
-    companyDisplay.append(Object.assign(document.createElement("hr")));
-}
+        companyDisplay.append(Object.assign(document.createElement("h4"), { textContent: company.name }));
+        companyDisplay.append(Object.assign(document.createElement("h5"), { textContent: company.email }));
+        companyDisplay.append(Object.assign(document.createElement("hr")));
+        companyDisplay.append(Object.assign(document.createElement("h6"), { textContent: "Locations" }));
+        companyDisplay.append(Object.assign(document.createElement("p"), { textContent: company.locations }));
+        companyDisplay.append(Object.assign(document.createElement("hr")));
+        companyDisplay.append(Object.assign(document.createElement("h6"), { textContent: "Industries" }));
+        companyDisplay.append(Object.assign(document.createElement("p"), { textContent: company.industries }));
+        companyDisplay.append(Object.assign(document.createElement("hr")));
+    }
 
-async function fetchJobs() {
-    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
-    const jobs = await fetchedJobs.json();
-
-    jobs.forEach((job) => {
-        const cardDiv = Object.assign(document.createElement("div"), {
-            classList: "card",
-            style: "width: 50rem",
-            _id: job._id,
+    async function fetchJobs() {
+        const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
         });
+        const jobs = await fetchedJobs.json();
 
-        cardDiv.dataset.jobID = job._id;
+        jobs.forEach((job) => {
+            const cardDiv = Object.assign(document.createElement("div"), {
+                classList: "card",
+                style: "width: 50rem",
+                _id: job._id,
+            });
 
-        // trimmed description p element
-        const cardText = document.createElement("p");
-        cardText.classList.add("card-text");
+            cardDiv.dataset.jobID = job._id;
 
-        const slicedJobDescription = job.contents.slice(0, 200);
-        cardText.innerHTML = slicedJobDescription;
+            // trimmed description p element
+            const cardText = document.createElement("p");
+            cardText.classList.add("card-text");
 
-        cardText.innerHTML = `
+            const slicedJobDescription = job.contents.slice(0, 200);
+            cardText.innerHTML = slicedJobDescription;
+
+            cardText.innerHTML = `
         <p>Pay: ${job.pay}</p>
         <p>Location: ${job.location}</p>
         <h6>Description</h6>
          <p>${slicedJobDescription}</p>
       `;
 
-        cardDiv.innerHTML = `
+            cardDiv.innerHTML = `
       <div class="card-body">
       <h5 class="card-title">${job.name}</h5>
     </div>
       `;
-        cardDiv.querySelector(".card-body").appendChild(cardText);
+            cardDiv.querySelector(".card-body").appendChild(cardText);
 
-        jobsListContainer.appendChild(cardDiv);
-    });
-
-    //pagination handling
-    const itemsPerPage = 5;
-
-    let currentPage = 1;
-
-    // Calculate the number of total pages based on the number of jobs
-    const totalPages = Math.ceil(jobs.length / itemsPerPage);
-
-    // Create the pagination links dynamically
-    for (let i = 1; i <= totalPages; i++) {
-        const pageLink = document.createElement("li");
-        pageLink.classList.add("page-item");
-        pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        document.querySelector(".pagination").appendChild(pageLink);
-
-        if (i === 1) {
-            pageLink.classList.add("active");
-        }
-    }
-
-    // jobs on current page
-    async function showPage(page) {
-        const jobCards = $(".card");
-
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-
-        jobCards.hide();
-        jobCards.slice(start, end).show();
-        // calling function to display first job
-        await displayFirstJobDetails(jobCards[0].id);
-        // add "active" class for highlight color"
-    }
-
-    showPage(currentPage);
-
-    // Handle pagination click events
-    $(".pagination").on("click", "a.page-link", function (e) {
-        e.preventDefault();
-        const text = $(this).text();
-        if (text === "Previous") {
-            if (currentPage > 1) {
-                currentPage--;
-                showPage(currentPage);
-            }
-        } else if (text === "Next") {
-            if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
-                currentPage++;
-                showPage(currentPage);
-            }
-        } else {
-            currentPage = parseInt(text);
-            showPage(currentPage);
-        }
-
-        // check for active number, remove active class and add for current page number
-        const pageItems = document.querySelectorAll(".pagination .page-item");
-
-        pageItems.forEach((pageItem) => {
-            pageItem.classList.remove("active");
+            jobsListContainer.appendChild(cardDiv);
         });
 
-        const secondPageItem = document.querySelector(`.pagination .page-item:nth-child(${currentPage + 1})`);
+        //pagination handling
+        const itemsPerPage = 5;
 
-        secondPageItem.classList.add("active");
-    });
-}
+        let currentPage = 1;
 
-// display first job on page in details on right
-async function displayFirstJobDetails(id) {
-    const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
-    const data = await fetchedJobs.json();
-    const jobs = data;
+        // Calculate the number of total pages based on the number of jobs
+        const totalPages = Math.ceil(jobs.length / itemsPerPage);
 
-    const job = jobs[0];
+        // Create the pagination links dynamically
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = document.createElement("li");
+            pageLink.classList.add("page-item");
+            pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            document.querySelector(".pagination").appendChild(pageLink);
 
-    const singleJobView = Object.assign(document.createElement("div"), {
-        classList: "card",
-        style: "width: 50rem",
-    });
+            if (i === 1) {
+                pageLink.classList.add("active");
+            }
+        }
 
-    singleJobView.innerHTML = `
+        // jobs on current page
+        async function showPage(page) {
+            const jobCards = $(".card");
+
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            jobCards.hide();
+            jobCards.slice(start, end).show();
+            // calling function to display first job
+            await displayFirstJobDetails(jobCards[0].id);
+            // add "active" class for highlight color"
+        }
+
+        showPage(currentPage);
+
+        // Handle pagination click events
+        $(".pagination").on("click", "a.page-link", function (e) {
+            e.preventDefault();
+            const text = $(this).text();
+            if (text === "Previous") {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            } else if (text === "Next") {
+                if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            } else {
+                currentPage = parseInt(text);
+                showPage(currentPage);
+            }
+
+            // check for active number, remove active class and add for current page number
+            const pageItems = document.querySelectorAll(".pagination .page-item");
+
+            pageItems.forEach((pageItem) => {
+                pageItem.classList.remove("active");
+            });
+
+            const secondPageItem = document.querySelector(`.pagination .page-item:nth-child(${currentPage + 1})`);
+
+            secondPageItem.classList.add("active");
+        });
+    }
+
+    // display first job on page in details on right
+    async function displayFirstJobDetails(id) {
+        const fetchedJobs = await fetch(baseAPI + "job/company/" + companyId);
+        const data = await fetchedJobs.json();
+        const jobs = data;
+
+        const job = jobs[0];
+
+        const singleJobView = Object.assign(document.createElement("div"), {
+            classList: "card",
+            style: "width: 50rem",
+        });
+
+        singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>Pay: ${job.pay}</p>
    <p>Location: ${job.location}</p>
    <h6>Description</h6>
    <p>${job.contents}</p>
    `;
-    jobViewContainer.innerHTML = "";
-    jobViewContainer.appendChild(singleJobView);
-}
+        jobViewContainer.innerHTML = "";
+        jobViewContainer.appendChild(singleJobView);
+    }
 
-jobsListContainer.addEventListener("click", async (e) => {
-    e.preventDefault();
+    jobsListContainer.addEventListener("click", async (e) => {
+        e.preventDefault();
 
-    const target = e.target.closest(".card");
+        const target = e.target.closest(".card");
 
-    const fetchedJobs = await fetch(baseAPI + jobURLExt);
-    const data = await fetchedJobs.json();
-    const jobs = data;
+        const fetchedJobs = await fetch(baseAPI + jobURLExt);
+        const data = await fetchedJobs.json();
+        const jobs = data;
 
-    const job = jobs.find((job) => {
-        return job._id === target._id;
-    });
+        const job = jobs.find((job) => {
+            return job._id === target._id;
+        });
 
-    const singleJobView = Object.assign(document.createElement("div"), {
-        classList: "card",
-        style: "width: 50rem",
-    });
+        const singleJobView = Object.assign(document.createElement("div"), {
+            classList: "card",
+            style: "width: 50rem",
+        });
 
-    singleJobView.innerHTML = `
+        singleJobView.innerHTML = `
     <h5>Title: ${job.name}</h5>
     <h6>Description</h6>
     <p>${job.contents}</p>
     <p>Location: ${job.location}</p>
 
    `;
-    jobViewContainer.innerHTML = "";
-    jobViewContainer.appendChild(singleJobView);
-});
+        jobViewContainer.innerHTML = "";
+        jobViewContainer.appendChild(singleJobView);
+    });
 
-fetchCompany();
-fetchJobs();
+    fetchCompany();
+    fetchJobs();
 
-if (companyEmail && companyId) {
-    companySignin.innerText = companyEmail;
+    if (companyEmail && companyId) {
+        companySignin.innerText = companyEmail;
 
-    companySignup.innerHTML = ``;
+        companySignup.innerHTML = ``;
 
-    const signOutElement = document.createElement("li");
-    signOutElement.classList.add("nav-item");
-    signOutElement.id = "compSignoutLink";
-    signOutElement.innerHTML = `
+        const signOutElement = document.createElement("li");
+        signOutElement.classList.add("nav-item");
+        signOutElement.id = "compSignoutLink";
+        signOutElement.innerHTML = `
     <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
     `;
-    document.getElementById("companyNavBar").append(signOutElement);
+        document.getElementById("companyNavBar").append(signOutElement);
+    }
 }
