@@ -8,8 +8,8 @@ const jobsListContainer = document.getElementById("jobs-list-container");
 const jobViewContainer = document.getElementById("job-detail-container");
 const companyDisplay = document.getElementById("companyDisplay");
 
-const companyId = localStorage.getItem("_id");
-const companyEmail = localStorage.getItem("email");
+const companyId = localStorage.getItem("companyId");
+const companyEmail = localStorage.getItem("companyEmail");
 
 async function fetchCompany() {
     const fullCompanyURL = baseAPI + compURLExt + companyEmail;
@@ -47,6 +47,13 @@ async function fetchJobs() {
         const slicedJobDescription = job.contents.slice(0, 200);
         cardText.innerHTML = slicedJobDescription;
 
+        cardText.innerHTML = `
+        <p>Pay: ${job.pay}</p>
+        <p>Location: ${job.location}</p>
+        <h6>Description</h6>
+         <p>${slicedJobDescription}</p>
+      `;
+
         cardDiv.innerHTML = `
       <div class="card-body">
       <h5 class="card-title">${job.name}</h5>
@@ -57,9 +64,25 @@ async function fetchJobs() {
         jobsListContainer.appendChild(cardDiv);
     });
 
+    //pagination handling
     const itemsPerPage = 5;
 
     let currentPage = 1;
+
+    // Calculate the number of total pages based on the number of jobs
+    const totalPages = Math.ceil(jobs.length / itemsPerPage);
+
+    // Create the pagination links dynamically
+    for (let i = 1; i <= totalPages; i++) {
+        const pageLink = document.createElement("li");
+        pageLink.classList.add("page-item");
+        pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        document.querySelector(".pagination").appendChild(pageLink);
+
+        if (i === 1) {
+            pageLink.classList.add("active");
+        }
+    }
 
     // jobs on current page
     async function showPage(page) {
@@ -123,10 +146,11 @@ async function displayFirstJobDetails(id) {
     });
 
     singleJobView.innerHTML = `
-   <h5>Title: ${job.name}</h5>
+   <h5>${job.name}</h5>
+   <p>Pay: ${job.pay}</p>
+   <p>Location: ${job.location}</p>
    <h6>Description</h6>
    <p>${job.contents}</p>
-   <p>Location: ${job.location}</p>
    `;
     jobViewContainer.innerHTML = "";
     jobViewContainer.appendChild(singleJobView);
@@ -165,3 +189,16 @@ jobsListContainer.addEventListener("click", async (e) => {
 
 fetchCompany();
 fetchJobs();
+
+if (companyEmail && companyId) {
+    document.getElementById("signin-link").innerText = companyEmail;
+
+    document.getElementById("signup-lst").innerHTML = "";
+    const signOutElement = document.createElement("li");
+    signOutElement.classList.add("nav-item");
+    signOutElement.id = "signout-lst";
+    signOutElement.innerHTML = `
+    <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
+    `;
+    document.getElementById("nav-items-lst").append(signOutElement);
+}

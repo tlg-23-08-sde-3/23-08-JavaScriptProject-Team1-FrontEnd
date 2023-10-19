@@ -43,8 +43,8 @@ document.getElementById("companySignUpForm").addEventListener("submit", (event) 
         })
         .then((data) => {
             localStorage.setItem("token", data.token);
-            localStorage.setItem("_id", data._id);
-            localStorage.setItem("email", data.email);
+            localStorage.setItem("companyId", data._id);
+            localStorage.setItem("companyEmail", data.email);
         })
         .catch((error) => {
             console.error(error);
