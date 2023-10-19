@@ -21,8 +21,11 @@ document.getElementById("signInForm").addEventListener("submit", (event) => {
       })
       .then((data) => {
          localStorage.setItem("token", data.token);
+         localStorage.setItem("candidate", data.email);
 
          window.location.href = "../index.html";
+         document.getElementById("keywords-search-input").innerText =
+            "Logged In";
       })
       .catch((error) => {
          console.error(error);
