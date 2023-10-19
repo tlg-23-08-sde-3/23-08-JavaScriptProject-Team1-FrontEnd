@@ -1,12 +1,10 @@
-// External JavaScript file (signout.js)
-
 document.addEventListener("DOMContentLoaded", function () {
     const signoutLink = document.getElementById("signout-link");
 
     if (signoutLink) {
         signoutLink.addEventListener("click", function (e) {
-            e.preventDefault(); // Prevent the default link behavior (e.g., navigating to a new page)
-            signout(); // Call your signout function
+            e.preventDefault();
+            signout();
         });
     }
 });
