@@ -152,6 +152,7 @@ async function displayFirstJobDetails(id) {
 jobsListContainer.addEventListener("click", async (e) => {
    e.preventDefault();
 
+   // favorite add
    if (e.target.tagName === "IMG") {
       console.log(e.target.parentNode.id.split("-")[2]);
       console.log(localStorage.getItem("candidate"));
@@ -211,11 +212,14 @@ jobsListContainer.addEventListener("click", async (e) => {
    jobViewContainer.appendChild(singleJobView);
 });
 
+
+// search jobs
 document
    .getElementById("search-jobs-form")
    .addEventListener("submit", async (e) => {
       e.preventDefault();
       console.log("triggwered");
+
 
       const jobRoleInput = document.getElementById("role-search-input").value;
       const locationInput = document.getElementById(
@@ -362,6 +366,8 @@ document
 
 fetchJobs();
 
+
+// modify sign/sign up links
 if (localStorage.getItem("candidate")) {
    console.log(localStorage.getItem("candidate"));
    document.getElementById("signin-link").innerText =
@@ -378,5 +384,5 @@ if (localStorage.getItem("candidate")) {
 }
 
 document.getElementById("favorites-link").addEventListener("click", (e) => {
-   
+   //todo
 });
