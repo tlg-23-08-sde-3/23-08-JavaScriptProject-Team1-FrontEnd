@@ -1,20 +1,22 @@
-const apiUrl =
-   "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
+// const apiUrl =
+//    "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
+
+
+
+const apiUrl = "http://localhost:3000/job";
 
 const jobsListContainer = document.getElementById("jobs-list-container");
 
 async function fetchJobs() {
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
-   
-
+   const jobs = await fetchedJobs.json();
+   console.log(jobs);
 
    jobs.forEach((job) => {
       const cardDiv = Object.assign(document.createElement("div"), {
          classList: "card",
          style: "width: 50rem",
-         id: job.id,
+         id: job._id,
       });
 
       cardDiv.dataset.jobID = job.id;
@@ -22,9 +24,20 @@ async function fetchJobs() {
       // trimmed description p element
       const cardText = document.createElement("p");
       cardText.classList.add("card-text");
+      const favLink = document.createElement("a");
+      favLink.id = `fav-jobId-${job._id}`;
+      const favImg = document.createElement("img");
+      favImg.src = "star.png";
+      favImg.style = "width: 20px; height: 20px";
+      favLink.append(favImg);
 
       const slicedJobDescription = job.contents.slice(0, 200);
-      cardText.innerHTML = slicedJobDescription;
+      cardText.innerHTML = `
+         
+         <p>${job.pay}</p>
+         <p>${job.location}</p>
+         ${slicedJobDescription}
+      `;
 
       cardDiv.innerHTML = `
       <div class="card-body">
@@ -32,6 +45,7 @@ async function fetchJobs() {
     </div>
       `;
       cardDiv.querySelector(".card-body").appendChild(cardText);
+      cardDiv.querySelector(".card-body").appendChild(favLink);
 
       jobsListContainer.appendChild(cardDiv);
    });
@@ -40,6 +54,21 @@ async function fetchJobs() {
    const itemsPerPage = 5;
 
    let currentPage = 1;
+
+   // Calculate the number of total pages based on the number of jobs
+   const totalPages = Math.ceil(jobs.length / itemsPerPage);
+
+   // Create the pagination links dynamically
+   for (let i = 1; i <= totalPages; i++) {
+      const pageLink = document.createElement("li");
+      pageLink.classList.add("page-item");
+      pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+      document.querySelector(".pagination").appendChild(pageLink);
+
+      if (i === 1) {
+         pageLink.classList.add("active");
+      }
+   }
 
    // jobs on current page
    async function showPage(page) {
@@ -85,7 +114,7 @@ async function fetchJobs() {
       });
 
       const secondPageItem = document.querySelector(
-         `.pagination .page-item:nth-child(${currentPage + 1})`
+         `.pagination .page-item:nth-child(${currentPage})`
       );
 
       secondPageItem.classList.add("active");
@@ -95,13 +124,12 @@ async function fetchJobs() {
 // display first job on page in details on right
 async function displayFirstJobDetails(id) {
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
+   const jobs = await fetchedJobs.json();
 
+   // const jobs = data.results;
 
    const job = jobs.find((job) => {
-      
-      return job.id === Number(id);
+      return job._id.trim() === id.trim(); // white space though length same
    });
 
    const jobViewContainer = document.getElementById("jobs-view-conainer");
@@ -114,7 +142,7 @@ async function displayFirstJobDetails(id) {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
+   <button type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Apply</button> 
 
    `;
    jobViewContainer.innerHTML = "";
@@ -124,16 +152,46 @@ async function displayFirstJobDetails(id) {
 jobsListContainer.addEventListener("click", async (e) => {
    e.preventDefault();
 
+   if (e.target.tagName === "IMG") {
+      console.log(e.target.parentNode.id.split("-")[2]);
+      console.log(localStorage.getItem("candidate"));
+
+      const jobId = e.target.parentNode.id.split("-")[2];
+      const email = localStorage.getItem("candidate");
+      const token = localStorage.getItem("token");
+
+      if (email && jobId) {
+         fetch("http://localhost:3000/candidate/favorites", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email, jobId }),
+         })
+            .then((response) => {
+               if (response.ok) {
+                  alert("Added to favorites list!");
+               } else {
+                  alert("Already Favorited!");
+               }
+            })
+            .catch((error) => {
+               console.error("Error:", error);
+            });
+      } else {
+         alert("Please sign in to favorite jobs!");
+      }
+   }
+
    const target = e.target.closest(".card");
 
    const fetchedJobs = await fetch(apiUrl);
-   const data = await fetchedJobs.json();
-   const jobs = data.results;
-   
+   const jobs = await fetchedJobs.json();
+   // const jobs = data.results;
 
    const job = jobs.find((job) => {
-      
-      return job.id === Number(target.id);
+      return job._id.trim() === target.id.trim();
    });
 
    const jobViewContainer = document.getElementById("jobs-view-conainer");
@@ -146,11 +204,179 @@ jobsListContainer.addEventListener("click", async (e) => {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" onclick="window.location.href='${job.refs.landing_page}'" target="_blank" rel="noopener noreferrer">Apply</button>
+   <button type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Apply</button>
 
    `;
    jobViewContainer.innerHTML = "";
    jobViewContainer.appendChild(singleJobView);
 });
 
+document
+   .getElementById("search-jobs-form")
+   .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      console.log("triggwered");
+
+      const jobRoleInput = document.getElementById("role-search-input").value;
+      const locationInput = document.getElementById(
+         "location-search-input"
+      ).value;
+      const keywordsInput = document.getElementById(
+         "keywords-search-input"
+      ).value;
+
+      console.log(jobRoleInput, locationInput);
+
+      const query = {};
+
+      if (jobRoleInput) {
+         query.name = jobRoleInput;
+      }
+
+      if (locationInput) {
+         query.location = locationInput;
+      }
+
+      if (keywordsInput) {
+         query.keywords = keywordsInput;
+      }
+
+      //create query string
+      const queryString = new URLSearchParams(query).toString();
+
+      console.log(apiUrl + `?${queryString}`);
+
+      const fetchedJobs = await fetch(apiUrl + `?${queryString}`);
+      const jobs = await fetchedJobs.json();
+      console.log(jobs);
+
+      jobsListContainer.innerHTML = "";
+      document.querySelector(".pagination").innerHTML = "";
+
+      jobs.forEach((job) => {
+         const cardDiv = Object.assign(document.createElement("div"), {
+            classList: "card",
+            style: "width: 50rem",
+            id: job._id,
+         });
+
+         cardDiv.dataset.jobID = job.id;
+
+         // trimmed description p element
+         const cardText = document.createElement("p");
+         cardText.classList.add("card-text");
+
+         const slicedJobDescription = job.contents.slice(0, 200);
+         cardText.innerHTML = `
+            
+            <p>${job.pay}</p>
+            <p>${job.location}</p>
+            ${slicedJobDescription}
+         `;
+
+         cardDiv.innerHTML = `
+         <div class="card-body">
+         <h5 class="card-title">${job.name}</h5>
+       </div>
+         `;
+         cardDiv.querySelector(".card-body").appendChild(cardText);
+
+         jobsListContainer.appendChild(cardDiv);
+      });
+
+      //pagination handling
+      const itemsPerPage = 5;
+
+      let currentPage = 1;
+
+      // Calculate the number of total pages based on the number of jobs
+      const totalPages = Math.ceil(jobs.length / itemsPerPage);
+
+      // Create the pagination links dynamically
+      for (let i = 1; i <= totalPages; i++) {
+         const pageLink = document.createElement("li");
+         pageLink.classList.add("page-item");
+         pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+         document.querySelector(".pagination").appendChild(pageLink);
+
+         if (i === 1) {
+            pageLink.classList.add("active");
+         }
+      }
+
+      // jobs on current page
+      async function showPage(page) {
+         const jobCards = $(".card");
+         console.log(jobCards);
+
+         const start = (page - 1) * itemsPerPage;
+         const end = start + itemsPerPage;
+
+         jobCards.hide();
+         jobCards.slice(start, end).show();
+         // calling function to display first job
+
+         await displayFirstJobDetails(jobCards.slice(start, end)[0].id);
+         // add "active" class for highlight color"
+      }
+
+      showPage(currentPage);
+
+      // Handle pagination click events
+      $(".pagination").on("click", "a.page-link", function (e) {
+         e.preventDefault();
+         const text = $(this).text();
+         if (text === "Previous") {
+            if (currentPage > 1) {
+               currentPage--;
+               showPage(currentPage);
+            }
+         } else if (text === "Next") {
+            if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
+               currentPage++;
+               showPage(currentPage);
+            }
+         } else {
+            currentPage = parseInt(text);
+            showPage(currentPage);
+         }
+
+         // check for active number, remove active class and add for current page number
+         const pageItems = document.querySelectorAll(".pagination .page-item");
+
+         pageItems.forEach((pageItem) => {
+            pageItem.classList.remove("active");
+         });
+
+         const secondPageItem = document.querySelector(
+            `.pagination .page-item:nth-child(${currentPage})`
+         );
+
+         secondPageItem.classList.add("active");
+      });
+
+      document.getElementById("role-search-input").value = "";
+      document.getElementById("location-search-input").value = "";
+      document.getElementById("keywords-search-input").value = "";
+   });
+
 fetchJobs();
+
+if (localStorage.getItem("candidate")) {
+   console.log(localStorage.getItem("candidate"));
+   document.getElementById("signin-link").innerText =
+      localStorage.getItem("candidate");
+
+   document.getElementById("signup-lst").innerHTML = "";
+   const signOutElement = document.createElement("li");
+   signOutElement.classList.add("nav-item");
+   signOutElement.id = "signout-lst";
+   signOutElement.innerHTML = `
+   <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
+   `;
+   document.getElementById("nav-items-lst").append(signOutElement);
+}
+
+document.getElementById("favorites-link").addEventListener("click", (e) => {
+   
+});
