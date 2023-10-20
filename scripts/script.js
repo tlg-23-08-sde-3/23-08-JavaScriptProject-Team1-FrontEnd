@@ -155,6 +155,8 @@ async function displayFirstJobDetails(id) {
    <p>${job.location}</p>
    <p>Job ID: ${job._id}</p>
    <p>Salary: ${job.pay}</p>
+   <p>Created: ${job.created_at}</p>
+   <p>Updated: ${job.updatedAt}</p>
    <hr />
    <p>${job.contents}</p>
    <button class="btn btn-primary applyBtn" >Apply</button> 
@@ -222,6 +224,8 @@ jobsListContainer.addEventListener("click", async (e) => {
     <p>${job.location}</p>
     <p>Job ID: ${job._id}</p>
     <p>Salary: ${job.pay}</p>
+    <p>Created: ${job.created_at}</p>
+    <p>Updated: ${job.updatedAt}</p>
     <hr />
     <p>${job.contents}</p>
    <button class="btn btn-primary applyBtn">Apply</button>
@@ -291,7 +295,8 @@ document.getElementById("search-jobs-form").addEventListener("submit", async (e)
         cardText.innerHTML = `
          
          <p><b>Salary: </b>${job.pay}</p>
-         <p><b>Location:</b> ${job.location}</p>
+         <p>Created: ${job.created_at}</p>
+         <p>Updated: ${job.updatedAt}</p>
          <p><b>Job Description: </b>${slicedJobDescription}</p>
       `;
 

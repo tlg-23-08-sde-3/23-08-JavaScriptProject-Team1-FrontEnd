@@ -32,7 +32,11 @@ async function apply(jobId) {
 jobViewContainer.addEventListener("click", async (e) => {
     e.preventDefault();
     if (e.target.classList.contains("applyBtn")) {
-        const jobId = e.target.parentElement.id;
-        apply(jobId);
+        if (candidateId && email && token) {
+            const jobId = e.target.parentElement.id;
+            apply(jobId);
+        } else {
+            location.assign("./pages/signin.html");
+        }
     }
 });
