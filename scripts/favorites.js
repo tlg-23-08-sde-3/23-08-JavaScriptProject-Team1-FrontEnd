@@ -168,24 +168,35 @@ async function displayFirstJobDetails(id) {
 }
 
 jobsListContainer.addEventListener("click", async (e) => {
-    e.preventDefault();
 
-    if (e.target.tagName === "IMG") {
-        console.log(e.target.parentNode.id.split("-")[2]);
-        console.log(localStorage.getItem("candidate"));
+   e.preventDefault();
 
-        const jobId = e.target.parentNode.id.split("-")[2];
-        const email = localStorage.getItem("candidate");
-        const token = localStorage.getItem("token");
+   if (e.target.tagName === "IMG") {
+      console.log(e.target.parentNode.id.split("-")[2]);
+      console.log(localStorage.getItem("candidate"));
 
-        if (email && jobId) {
-            fetch("http://localhost:3000/candidate/favorites/remove", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ email, jobId }),
+      const jobId = e.target.parentNode.id.split("-")[2];
+      const email = localStorage.getItem("candidate");
+      const token = localStorage.getItem("token");
+
+      if (email && jobId) {
+         // ---------------------------------------------------remove favorites-----------------------------------------------------------
+         fetch("http://localhost:3000/candidate/favorites/remove", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email, jobId }),
+         })
+            .then((response) => {
+               if (response.ok) {
+                  alert("Job removed from favorites list!");
+                  location.reload();
+               } else {
+                  alert("Error: Action can not be completed!");
+               }
+
             })
                 .then((response) => {
                     if (response.ok) {
