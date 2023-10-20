@@ -12,12 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
 function signout() {
     try {
         localStorage.removeItem("token");
-        localStorage.removeItem("candidate");
-        localStorage.removeItem("candidateId");
         localStorage.removeItem("companyEmail");
         localStorage.removeItem("companyId");
+        localStorage.removeItem("candidate");
+        localStorage.removeItem("candidateId");
 
-        location.assign("./index.html");
+        location.assign("../index.html");
     } catch (error) {
         alert(error);
     }
