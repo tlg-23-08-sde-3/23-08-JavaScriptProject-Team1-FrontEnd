@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 import { favEventHandler } from "./FavoriteEventListener.js";
 import { authLinkCheck } from "./authLinkCheck.js";
@@ -182,7 +182,7 @@ jobsListContainer.addEventListener("click", async (e) => {
         //   const token = localStorage.getItem("token");
 
         if (email && jobId) {
-            fetch("http://localhost:3000/candidate/favorites/add", {
+            fetch(baseAPI + "candidate/favorites/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
