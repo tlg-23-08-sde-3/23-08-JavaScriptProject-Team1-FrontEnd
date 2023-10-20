@@ -3,6 +3,7 @@ const baseAPI = "http://localhost:3000/";
 
 import { favEventHandler } from "./FavoriteEventListener.js";
 import { authLinkCheck } from "./authLinkCheck.js";
+import { jobSearch } from "./jobSearch.js";
 
 const apiUrl = baseAPI + "job";
 
@@ -29,6 +30,7 @@ async function fetchJobs() {
         // create cards for jibs
         createJobCards(job, jobsListContainer, cardDiv);
     });
+
 
     //------------------------------------------------pagination handling-------------------------------------------------
     const itemsPerPage = 5;
@@ -86,8 +88,10 @@ async function fetchJobs() {
             showPage(currentPage);
         }
 
-        // check for active number, remove active class and add for current page number
-        const pageItems = document.querySelectorAll(".pagination .page-item");
+
+      // pagination style: check for active number, remove active class and add for current page number
+      const pageItems = document.querySelectorAll(".pagination .page-item");
+
 
         pageItems.forEach((pageItem) => {
             pageItem.classList.remove("active");
@@ -99,7 +103,8 @@ async function fetchJobs() {
     });
 }
 
-// create cards for jobs
+// create cards for jobs function
+
 function createJobCards(job, jobsListContainer, cardDiv) {
     const cardText = document.createElement("p");
     cardText.classList.add("card-text");
@@ -182,6 +187,8 @@ jobsListContainer.addEventListener("click", async (e) => {
                 },
                 body: JSON.stringify({ email, jobId }),
             })
+
+
                 .then((response) => {
                     if (response.ok) {
                         alert("Added to favorites list!");
@@ -232,153 +239,166 @@ jobsListContainer.addEventListener("click", async (e) => {
 });
 
 // --------------------------------------------------------search jobs Event Listener-------------------------------------------------------------
-document.getElementById("search-jobs-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    console.log("triggwered");
 
-    const jobRoleInput = document.getElementById("role-search-input").value;
-    const locationInput = document.getElementById("location-search-input").value;
-    const keywordsInput = document.getElementById("keywords-search-input").value;
+document
+   .getElementById("search-jobs-form")
+   .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      console.log("searching")
+      //    console.log("triggwered");
 
-    console.log(jobRoleInput, locationInput);
+      //    const jobRoleInput = document.getElementById("role-search-input").value;
+      //    const locationInput = document.getElementById(
+      //       "location-search-input"
+      //    ).value;
+      //    const keywordsInput = document.getElementById(
+      //       "keywords-search-input"
+      //    ).value;
 
-    const query = {};
+      //    console.log(jobRoleInput, locationInput);
 
-    if (jobRoleInput) {
-        query.name = jobRoleInput;
-    }
+      //    const query = {};
 
-    if (locationInput) {
-        query.location = locationInput;
-    }
+      //    if (jobRoleInput) {
+      //       query.name = jobRoleInput;
+      //    }
 
-    if (keywordsInput) {
-        query.keywords = keywordsInput;
-    }
+      //    if (locationInput) {
+      //       query.location = locationInput;
+      //    }
 
-    //create query string using JS API
-    const queryString = new URLSearchParams(query).toString();
+      //    if (keywordsInput) {
+      //       query.keywords = keywordsInput;
+      //    }
 
-    console.log(apiUrl + `?${queryString}`);
+      //    //create query string using JS API
+      //    const queryString = new URLSearchParams(query).toString();
 
-    const fetchedJobs = await fetch(apiUrl + `?${queryString}`);
-    const jobs = await fetchedJobs.json();
-    console.log(jobs);
+      //    console.log(apiUrl + `?${queryString}`);
 
-    jobsListContainer.innerHTML = "";
-    document.querySelector(".pagination").innerHTML = ""; // clearing pagination navbar
+      //    const fetchedJobs = await fetch(apiUrl + `?${queryString}`);
+      //    const jobs = await fetchedJobs.json();
+      //    console.log(jobs);
 
-    jobs.forEach((job) => {
-        const cardDiv = Object.assign(document.createElement("div"), {
-            classList: "card",
-            style: "width: 50rem",
-            id: job._id,
-        });
+      //    jobsListContainer.innerHTML = "";
+      //    document.querySelector(".pagination").innerHTML = ""; // clearing pagination navbar
 
-        cardDiv.dataset.jobID = job.id;
+      //    jobs.forEach((job) => {
+      //       const cardDiv = Object.assign(document.createElement("div"), {
+      //          classList: "card",
+      //          style: "width: 50rem",
+      //          id: job._id,
+      //       });
 
-        // trimmed description p element
-        const cardText = document.createElement("p");
-        cardText.classList.add("card-text");
-        const favLink = document.createElement("a");
-        favLink.id = `fav-jobId-${job._id}`;
-        const favImg = document.createElement("img");
-        favImg.src = "star.png";
-        favImg.style = "width: 20px; height: 20px";
-        favLink.append(favImg);
+      //       cardDiv.dataset.jobID = job.id;
 
-        const slicedJobDescription = job.contents.slice(0, 200);
-        cardText.innerHTML = `
-         
-         <p><b>Salary: </b>${job.pay}</p>
-         <p><b>Location:</b> ${job.location}</p>
-         <p><b>Job Description: </b>${slicedJobDescription}</p>
-      `;
+      //       // trimmed description p element
+      //       const cardText = document.createElement("p");
+      //       cardText.classList.add("card-text");
+      //       const favLink = document.createElement("a");
+      //       favLink.id = `fav-jobId-${job._id}`;
+      //       const favImg = document.createElement("img");
+      //       favImg.src = "star.png";
+      //       favImg.style = "width: 20px; height: 20px";
+      //       favLink.append(favImg);
 
-        cardDiv.innerHTML = `
-      <div class="card-body">
-      <h5 class="card-title">${job.name}</h5>
-    </div>
-      `;
-        cardDiv.querySelector(".card-body").appendChild(cardText);
-        cardDiv.querySelector(".card-body").appendChild(favLink);
+      //       const slicedJobDescription = job.contents.slice(0, 200);
+      //       cardText.innerHTML = `
 
-        jobsListContainer.appendChild(cardDiv);
-    });
+      //       <p><b>Salary: </b>${job.pay}</p>
+      //       <p><b>Location:</b> ${job.location}</p>
+      //       <p><b>Job Description: </b>${slicedJobDescription}</p>
+      //    `;
 
-    //----------------------------------------------pagination handling------------------------------
-    const itemsPerPage = 5;
+      //       cardDiv.innerHTML = `
+      //    <div class="card-body">
+      //    <h5 class="card-title">${job.name}</h5>
+      //  </div>
+      //    `;
+      //       cardDiv.querySelector(".card-body").appendChild(cardText);
+      //       cardDiv.querySelector(".card-body").appendChild(favLink);
 
-    let currentPage = 1;
+      //       jobsListContainer.appendChild(cardDiv);
+      //    });
 
-    // Calculate the number of total pages based on the number of jobs
-    const totalPages = Math.ceil(jobs.length / itemsPerPage);
+      //    //----------------------------------------------pagination handling------------------------------
+      //    const itemsPerPage = 5;
 
-    // Create the pagination links dynamically
-    for (let i = 1; i <= totalPages; i++) {
-        const pageLink = document.createElement("li");
-        pageLink.classList.add("page-item");
-        pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        document.querySelector(".pagination").appendChild(pageLink);
+      //    let currentPage = 1;
 
-        if (i === 1) {
-            pageLink.classList.add("active");
-        }
-    }
+      //    // Calculate the number of total pages based on the number of jobs
+      //    const totalPages = Math.ceil(jobs.length / itemsPerPage);
 
-    // jobs on current page
-    async function showPage(page) {
-        const jobCards = $(".card");
-        console.log(jobCards);
+      //    // Create the pagination links dynamically
+      //    for (let i = 1; i <= totalPages; i++) {
+      //       const pageLink = document.createElement("li");
+      //       pageLink.classList.add("page-item");
+      //       pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+      //       document.querySelector(".pagination").appendChild(pageLink);
 
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
+      //       if (i === 1) {
+      //          pageLink.classList.add("active");
+      //       }
+      //    }
 
-        jobCards.hide();
-        jobCards.slice(start, end).show();
-        // calling function to display first job
+      //    // jobs on current page
+      //    async function showPage(page) {
+      //       const jobCards = $(".card");
+      //       console.log(jobCards);
 
-        await displayFirstJobDetails(jobCards.slice(start, end)[0].id);
-        // add "active" class for highlight color"
-    }
+      //       const start = (page - 1) * itemsPerPage;
+      //       const end = start + itemsPerPage;
 
-    showPage(currentPage);
+      //       jobCards.hide();
+      //       jobCards.slice(start, end).show();
+      //       // calling function to display first job
 
-    // Handle pagination click events
-    $(".pagination").on("click", "a.page-link", function (e) {
-        e.preventDefault();
-        const text = $(this).text();
-        if (text === "Previous") {
-            if (currentPage > 1) {
-                currentPage--;
-                showPage(currentPage);
-            }
-        } else if (text === "Next") {
-            if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
-                currentPage++;
-                showPage(currentPage);
-            }
-        } else {
-            currentPage = parseInt(text);
-            showPage(currentPage);
-        }
+      //       await displayFirstJobDetails(jobCards.slice(start, end)[0].id);
+      //       // add "active" class for highlight color"
+      //    }
 
-        // check for active number, remove active class and add for current page number
-        const pageItems = document.querySelectorAll(".pagination .page-item");
+      //    showPage(currentPage);
 
-        pageItems.forEach((pageItem) => {
-            pageItem.classList.remove("active");
-        });
+      //    // Handle pagination click events
+      //    $(".pagination").on("click", "a.page-link", function (e) {
+      //       e.preventDefault();
+      //       const text = $(this).text();
+      //       if (text === "Previous") {
+      //          if (currentPage > 1) {
+      //             currentPage--;
+      //             showPage(currentPage);
+      //          }
+      //       } else if (text === "Next") {
+      //          if (currentPage < Math.ceil($(".card").length / itemsPerPage)) {
+      //             currentPage++;
+      //             showPage(currentPage);
+      //          }
+      //       } else {
+      //          currentPage = parseInt(text);
+      //          showPage(currentPage);
+      //       }
 
-        const secondPageItem = document.querySelector(`.pagination .page-item:nth-child(${currentPage})`);
+      //       // check for active number, remove active class and add for current page number
+      //       const pageItems = document.querySelectorAll(".pagination .page-item");
 
-        secondPageItem.classList.add("active");
-    });
+      //       pageItems.forEach((pageItem) => {
+      //          pageItem.classList.remove("active");
+      //       });
 
-    document.getElementById("role-search-input").value = "";
-    document.getElementById("location-search-input").value = "";
-    document.getElementById("keywords-search-input").value = "";
-});
+      //       const secondPageItem = document.querySelector(
+      //          `.pagination .page-item:nth-child(${currentPage})`
+      //       );
+
+      //       secondPageItem.classList.add("active");
+      //    });
+
+      //    document.getElementById("role-search-input").value = "";
+      //    document.getElementById("location-search-input").value = "";
+      //    document.getElementById("keywords-search-input").value = "";
+
+      jobSearch();
+   });
+
 
 // modify sign/sign up links
 
