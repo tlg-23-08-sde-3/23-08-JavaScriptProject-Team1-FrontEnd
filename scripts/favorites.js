@@ -34,21 +34,29 @@ async function fetchJobs() {
       // trimmed description p element
       const cardText = document.createElement("p");
       cardText.classList.add("card-text");
+      const favLink = document.createElement("a");
+      favLink.id = `fav-jobId-${job._id}`;
+      const favImg = document.createElement("img");
+      favImg.src = "../star.png";
+      favImg.classList.add("fav-img");
+      favImg.style = "width: 20px; height: 20px";
+      favLink.append(favImg);
 
       const slicedJobDescription = job.contents.slice(0, 200);
       cardText.innerHTML = `
-             
-             <p>${job.pay}</p>
-             <p>${job.location}</p>
-             ${slicedJobDescription}
-          `;
+         
+      <p><b>Salary: </b>${job.pay}</p>
+      <p><b>Location:</b> ${job.location}</p>
+      <p><b>Job Description: </b>${slicedJobDescription}</p>
+      `;
 
       cardDiv.innerHTML = `
-          <div class="card-body">
-          <h5 class="card-title">${job.name}</h5>
-        </div>
-          `;
+      <div class="card-body">
+      <h5 class="card-title">${job.name}</h5>
+    </div>
+      `;
       cardDiv.querySelector(".card-body").appendChild(cardText);
+      cardDiv.querySelector(".card-body").appendChild(favLink);
 
       jobsListContainer.appendChild(cardDiv);
    });
@@ -164,7 +172,7 @@ jobsListContainer.addEventListener("click", async (e) => {
       const token = localStorage.getItem("token");
 
       if (email && jobId) {
-         fetch("http://localhost:3000/candidate//favorites", {
+         fetch("http://localhost:3000/candidate/favorites/remove", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -174,9 +182,10 @@ jobsListContainer.addEventListener("click", async (e) => {
          })
             .then((response) => {
                if (response.ok) {
-                  alert("Added to favorites list!");
+                  alert("Job removed from favorites list!");
+                  location.reload();
                } else {
-                  alert("Already Favorited!");
+                  alert("Error: Action can not be completed!");
                }
             })
             .catch((error) => {

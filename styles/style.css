@@ -2,9 +2,13 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Nunito', sans-serif;
+    
 }
 
-
+body {
+    background-color: #3e5c76;
+}
 
 .job-posts {
     display: flex;
@@ -14,6 +18,7 @@
 
 .navbar {
     margin-bottom: 30px;
+    
 }
 
 .nav-list {
@@ -43,13 +48,45 @@
 .navbar {
     
     margin: 0 auto;
-    margin-bottom: 10px;
+    
     display: flex;
     flex-direction: column;
+    padding: 0;
     
 }
 
 
+
 .job-posts {
     margin-top: 80px;
+    display: flex;
+    justify-content: space-around;
+    width: 76%
+}
+
+.search-jobs-form {
+    position: fixed;
+    left: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 400px;
+}
+
+.search-jobs-form{
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.search-jobs-form input {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.fav-img:hover {
+cursor: pointer;
+}
+
+h4 {
+    color: white;
 }

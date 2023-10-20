@@ -1,5 +1,5 @@
 document.getElementById("signInForm").addEventListener("submit", (event) => {
-   event.preventDefault(); // Prevent the default form submission
+   event.preventDefault(); 
 
    const email = document.getElementById("email").value;
    const password = document.getElementById("password").value;
@@ -15,8 +15,8 @@ document.getElementById("signInForm").addEventListener("submit", (event) => {
          if (response.ok) {
             return response.json();
          } else {
-            alert("Sign Up Failed, please try again!");
-            throw new Error("Sign Up Failed");
+            alert("Sign In Failed, please try again!");
+            throw new Error("Sign In Failed");
          }
       })
       .then((data) => {
@@ -24,8 +24,8 @@ document.getElementById("signInForm").addEventListener("submit", (event) => {
          localStorage.setItem("candidate", data.email);
 
          window.location.href = "../index.html";
-         document.getElementById("keywords-search-input").innerText =
-            "Logged In";
+         // document.getElementById("keywords-search-input").innerText =
+         //    "Logged In";
       })
       .catch((error) => {
          console.error(error);

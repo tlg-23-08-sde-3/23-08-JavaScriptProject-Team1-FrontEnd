@@ -11,6 +11,14 @@
          crossorigin="anonymous"
       />
       <link rel="stylesheet" href="./styles/style.css" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Nunito&display=swap"
+         rel="stylesheet"
+      />
    </head>
    <body>
       <header>
@@ -21,7 +29,10 @@
                   id="nav-items-lst"
                >
                   <li class="nav-item">
-                     <a class="nav-link active" aria-current="page" href="#"
+                     <a
+                        class="nav-link active"
+                        aria-current="page"
+                        href="index.html"
                         >Home</a
                      >
                   </li>
@@ -30,7 +41,8 @@
                         class="nav-link active"
                         aria-current="page"
                         id="favorites-link"
-                        >Favourites</a
+                        href="./pages/favorites.html"
+                        >Favorites</a
                      >
                   </li>
 
@@ -53,36 +65,43 @@
                      >
                   </li>
                </ul>
-               <form class="d-flex" role="search" id="search-jobs-form">
-                  <input
-                     class="form-control me-2"
-                     type="search"
-                     placeholder="Job Role"
-                     aria-label="Search"
-                     id="role-search-input"
-                  />
-                  <input
-                     class="form-control me-2"
-                     type="search"
-                     placeholder="Location"
-                     aria-label="Search"
-                     id="location-search-input"
-                  />
-                  <input
-                     class="form-control me-2"
-                     type="search"
-                     placeholder="keywords"
-                     aria-label="Search"
-                     id="keywords-search-input"
-                  />
-                  <button class="btn btn-outline-success" type="submit">
-                     Search
-                  </button>
-               </form>
             </div>
          </nav>
       </header>
       <div class="job-posts">
+         <section class="job-search-container">
+            <form
+               class="d-flex search-jobs-form"
+               role="search"
+               id="search-jobs-form"
+            >
+               <h4>Job Search</h4>
+               <input
+                  class="form-control me-2"
+                  type="search"
+                  placeholder="Job Role"
+                  aria-label="Search"
+                  id="role-search-input"
+               />
+               <input
+                  class="form-control me-2"
+                  type="search"
+                  placeholder="Location"
+                  aria-label="Search"
+                  id="location-search-input"
+               />
+               <input
+                  class="form-control me-2"
+                  type="search"
+                  placeholder="keywords"
+                  aria-label="Search"
+                  id="keywords-search-input"
+               />
+               <button class="btn btn-primary" type="submit">
+                  Search
+               </button>
+            </form>
+         </section>
          <section
             id="jobs-list-container"
             class="jobs-list-container"

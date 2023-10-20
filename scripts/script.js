@@ -1,9 +1,14 @@
 // const apiUrl =
 //    "https://www.themuse.com/api/public/jobs?api_key=4b6ba413bd131cdcf4ee78cb2dfef3c9419f955d73f5210df1638e20584ba25c&company=Amazon&category=Software%20Engineering&page=1&descending=true";
 
+import { favEventHandler } from "./FavoriteEventListener.js";
+import { authLinkCheck } from "./authLinkCheck.js";
+
 const apiUrl = "http://localhost:3000/job";
 
 const jobsListContainer = document.getElementById("jobs-list-container");
+
+fetchJobs();
 
 async function fetchJobs() {
    const fetchedJobs = await fetch(apiUrl);
@@ -19,36 +24,12 @@ async function fetchJobs() {
 
       cardDiv.dataset.jobID = job.id;
 
-      // trimmed description p element
-      const cardText = document.createElement("p");
-      cardText.classList.add("card-text");
-      const favLink = document.createElement("a");
-      favLink.id = `fav-jobId-${job._id}`;
-      const favImg = document.createElement("img");
-      favImg.src = "star.png";
-      favImg.style = "width: 20px; height: 20px";
-      favLink.append(favImg);
 
-      const slicedJobDescription = job.contents.slice(0, 200);
-      cardText.innerHTML = `
-         
-         <p>${job.pay}</p>
-         <p>${job.location}</p>
-         ${slicedJobDescription}
-      `;
-
-      cardDiv.innerHTML = `
-      <div class="card-body">
-      <h5 class="card-title">${job.name}</h5>
-    </div>
-      `;
-      cardDiv.querySelector(".card-body").appendChild(cardText);
-      cardDiv.querySelector(".card-body").appendChild(favLink);
-
-      jobsListContainer.appendChild(cardDiv);
+      // create cards for jibs
+      createJobCards(job, jobsListContainer, cardDiv);
    });
 
-   //pagination handling
+   //------------------------------------------------pagination handling-------------------------------------------------
    const itemsPerPage = 5;
 
    let currentPage = 1;
@@ -63,10 +44,13 @@ async function fetchJobs() {
       pageLink.innerHTML = `<a class="page-link" href="#">${i}</a>`;
       document.querySelector(".pagination").appendChild(pageLink);
 
+      // default highlight on page 1
       if (i === 1) {
          pageLink.classList.add("active");
       }
    }
+
+   showPage(currentPage);
 
    // jobs on current page
    async function showPage(page) {
@@ -77,15 +61,12 @@ async function fetchJobs() {
 
       jobCards.hide();
       jobCards.slice(start, end).show();
-      // calling function to display first job
 
+      // calling function to display first job
       await displayFirstJobDetails(jobCards.slice(start, end)[0].id);
-      // add "active" class for highlight color"
    }
 
-   showPage(currentPage);
-
-   // Handle pagination click events
+   // -----------------------------------------------Handle pagination click events---------------------------------------------------
    $(".pagination").on("click", "a.page-link", function (e) {
       e.preventDefault();
       const text = $(this).text();
@@ -119,7 +100,40 @@ async function fetchJobs() {
    });
 }
 
-// display first job on page in details on right
+
+// create cards for jobs
+function createJobCards(job, jobsListContainer, cardDiv) {
+   const cardText = document.createElement("p");
+   cardText.classList.add("card-text");
+   const favLink = document.createElement("a");
+   favLink.id = `fav-jobId-${job._id}`;
+
+   const favImg = document.createElement("img");
+   favImg.classList.add("fav-img");
+   favImg.src = "star.png";
+   favImg.style = "width: 20px; height: 20px";
+   favLink.append(favImg);
+
+   const slicedJobDescription = job.contents.slice(0, 200);
+   cardText.innerHTML = `
+         
+         <p><b>Salary: </b>${job.pay}</p>
+         <p><b>Location:</b> ${job.location}</p>
+         <p><b>Job Description: </b>${slicedJobDescription}</p>
+      `;
+
+   cardDiv.innerHTML = `
+      <div class="card-body">
+      <h5 class="card-title">${job.name}</h5>
+    </div>
+      `;
+   cardDiv.querySelector(".card-body").appendChild(cardText);
+   cardDiv.querySelector(".card-body").appendChild(favLink);
+
+   jobsListContainer.appendChild(cardDiv);
+}
+
+// --------------------------------------------------display first job on page in details on right-----------------------------------------
 async function displayFirstJobDetails(id) {
    const fetchedJobs = await fetch(apiUrl);
    const jobs = await fetchedJobs.json();
@@ -140,27 +154,25 @@ async function displayFirstJobDetails(id) {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Apply</button> 
+   <button class="btn btn-primary" onclick="window.open('https://www.google.com', '_blank')">Apply</button> 
 
    `;
    jobViewContainer.innerHTML = "";
    jobViewContainer.appendChild(singleJobView);
 }
 
+// ---------------------------------------------------Event Listener For Job Click-------------------------------------------------------------------
 jobsListContainer.addEventListener("click", async (e) => {
    e.preventDefault();
 
-   // favorite add
+   // ---------------------------------------------------favorite add--------------------------------------------------------------------------------
    if (e.target.tagName === "IMG") {
-      console.log(e.target.parentNode.id.split("-")[2]);
-      console.log(localStorage.getItem("candidate"));
-
-      const jobId = e.target.parentNode.id.split("-")[2];
+      const jobId = e.target.parentNode.id.split("-")[2]; // extracting job id
       const email = localStorage.getItem("candidate");
       const token = localStorage.getItem("token");
 
       if (email && jobId) {
-         fetch("http://localhost:3000/candidate/favorites", {
+         fetch("http://localhost:3000/candidate/favorites/add", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -183,6 +195,8 @@ jobsListContainer.addEventListener("click", async (e) => {
       }
    }
 
+   //---------------------------------------------------------------Select Job Card-------------------------------------------------------
+
    const target = e.target.closest(".card");
 
    const fetchedJobs = await fetch(apiUrl);
@@ -203,14 +217,14 @@ jobsListContainer.addEventListener("click", async (e) => {
    singleJobView.innerHTML = `
    <h5>${job.name}</h5>
    <p>${job.contents}</p>
-   <button type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Apply</button>
+   <button class="btn btn-primary" onclick="window.open('https://www.google.com', '_blank')">Apply</button>
 
    `;
    jobViewContainer.innerHTML = "";
    jobViewContainer.appendChild(singleJobView);
 });
 
-// search jobs
+// --------------------------------------------------------search jobs Event Listener-------------------------------------------------------------
 document
    .getElementById("search-jobs-form")
    .addEventListener("submit", async (e) => {
@@ -241,7 +255,7 @@ document
          query.keywords = keywordsInput;
       }
 
-      //create query string
+      //create query string using JS API
       const queryString = new URLSearchParams(query).toString();
 
       console.log(apiUrl + `?${queryString}`);
@@ -251,7 +265,7 @@ document
       console.log(jobs);
 
       jobsListContainer.innerHTML = "";
-      document.querySelector(".pagination").innerHTML = "";
+      document.querySelector(".pagination").innerHTML = ""; // clearing pagination navbar
 
       jobs.forEach((job) => {
          const cardDiv = Object.assign(document.createElement("div"), {
@@ -265,26 +279,33 @@ document
          // trimmed description p element
          const cardText = document.createElement("p");
          cardText.classList.add("card-text");
+         const favLink = document.createElement("a");
+         favLink.id = `fav-jobId-${job._id}`;
+         const favImg = document.createElement("img");
+         favImg.src = "star.png";
+         favImg.style = "width: 20px; height: 20px";
+         favLink.append(favImg);
 
          const slicedJobDescription = job.contents.slice(0, 200);
          cardText.innerHTML = `
-            
-            <p>${job.pay}</p>
-            <p>${job.location}</p>
-            ${slicedJobDescription}
-         `;
+         
+         <p><b>Salary: </b>${job.pay}</p>
+         <p><b>Location:</b> ${job.location}</p>
+         <p><b>Job Description: </b>${slicedJobDescription}</p>
+      `;
 
          cardDiv.innerHTML = `
-         <div class="card-body">
-         <h5 class="card-title">${job.name}</h5>
-       </div>
-         `;
+      <div class="card-body">
+      <h5 class="card-title">${job.name}</h5>
+    </div>
+      `;
          cardDiv.querySelector(".card-body").appendChild(cardText);
+         cardDiv.querySelector(".card-body").appendChild(favLink);
 
          jobsListContainer.appendChild(cardDiv);
       });
 
-      //pagination handling
+      //----------------------------------------------pagination handling------------------------------
       const itemsPerPage = 5;
 
       let currentPage = 1;
@@ -360,58 +381,9 @@ document
       document.getElementById("keywords-search-input").value = "";
    });
 
-fetchJobs();
-
 // modify sign/sign up links
-if (localStorage.getItem("candidate")) {
-   console.log(localStorage.getItem("candidate"));
-   document.getElementById("signin-link").innerText =
-      localStorage.getItem("candidate");
 
-   document.getElementById("signup-lst").innerHTML = "";
-   const signOutElement = document.createElement("li");
-   signOutElement.classList.add("nav-item");
-   signOutElement.id = "signout-lst";
-   signOutElement.innerHTML = `
-   <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
-   `;
-   document.getElementById("nav-items-lst").append(signOutElement);
-}
+authLinkCheck();
 
-// ---------------------------------------------------------Favorites---------------------------------------------------
-
-document
-   .getElementById("favorites-link")
-   .addEventListener("click", async (e) => {
-      e.preventDefault();
-      const email = localStorage.getItem("candidate");
-      const token = localStorage.getItem("token");
-
-      // call fetch here
-
-      try {
-         const temp = await fetch(
-            `http://localhost:3000/candidate/favorites/${email}`, // middleware check for token
-            {
-               method: "GET",
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-               },
-            }
-         );
-
-         const res = await temp.json();
-         if (
-            res.message === "No Token Provided" ||
-            res.message === "Invalid Token"
-         ) {
-            alert("Please login to view favorites (Invalid Token!)");
-            return;
-         }
-         window.location.href = "./pages/favorites.html"; // this page will run script to load favorite jobs and render to HTML
-      } catch (error) {
-         console.log("error here");
-         alert(error);
-      }
-   });
+//favorite link event handler
+favEventHandler();

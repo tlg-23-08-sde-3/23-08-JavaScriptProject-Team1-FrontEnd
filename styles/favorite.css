@@ -1,0 +1,49 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+body {
+    width: 92%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #3e5c76;
+}
+
+.job-posts {
+    display: flex;
+    justify-content: center;
+    margin-right: 20px; 
+}
+
+.card {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.jobs-view-conainer {
+    position: fixed;
+    
+    right: 150px; 
+    /* scrolling */
+    height: 100%; 
+    overflow-y: auto; 
+    
+  }
+
+  .jobs-view-conainer .card {
+    padding: 30px;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: white;
+  }
+
+.fav-img:hover {
+    cursor: pointer;
+    }
