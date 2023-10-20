@@ -102,7 +102,7 @@ async function fetchJobs() {
    });
 }
 
-// ----------------------------------------------------------------create cards for jobs function--------------------------------------------------------
+// create cards for jobs function
 
 function createJobCards(job, jobsListContainer, cardDiv) {
    const cardText = document.createElement("p");
