@@ -34,6 +34,7 @@ document.getElementById("signUpForm").addEventListener("submit", (event) => {
       })
       .then((data) => {
          localStorage.setItem("token", data.token);
+         alert("Signed Up Successfully!")
 
          window.location.href = "../index.html";
       })
