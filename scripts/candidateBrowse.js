@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 const companyViewContainer = document.getElementById("company-view-container");
 const candidatesListContainer = document.getElementById("candidates-list-container");

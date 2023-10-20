@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 document.getElementById("signUpForm").addEventListener("submit", (event) => {
     event.preventDefault(); // Prevent the default form submission

@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 export const favEventHandler = () => {
     document.getElementById("favorites-link").addEventListener("click", async (e) => {
