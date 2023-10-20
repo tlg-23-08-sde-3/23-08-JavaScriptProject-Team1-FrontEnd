@@ -1,6 +1,5 @@
 //const baseAPI = "https://employmentdecoderapi.onrender.com/";
 const baseAPI = "http://localhost:3000/";
-const extURL = "company/signup";
 
 document.getElementById("companySignUpForm").addEventListener("submit", (event) => {
     event.preventDefault(); // Prevent the default form submission
@@ -25,7 +24,7 @@ document.getElementById("companySignUpForm").addEventListener("submit", (event) 
 
     companySignUpForm.reset();
 
-    fetch(baseAPI + extURL, {
+    fetch(baseAPI + "company/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

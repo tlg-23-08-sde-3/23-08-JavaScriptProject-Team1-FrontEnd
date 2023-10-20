@@ -1,90 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Candidate SignUp</title>
-   </head>
-   <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-   />
-   <link rel="stylesheet" href="../styles/signupStyle.css" />
-   <link
-      href="https://fonts.googleapis.com/css2?family=Nunito&display=swap"
-      rel="stylesheet"
-   />
-   <body>
-      <h2>Sign Up</h2>
-      <form id="signUpForm">
-         <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input
-               type="text"
-               class="form-control"
-               id="firstName"
-               placeholder="Enter Your First Name"
-               required
-            />
-         </div>
-         <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input
-               type="text"
-               class="form-control"
-               id="lastName"
-               placeholder="Enter Your Last Name"
-               required
-            />
-         </div>
-         <div class="mb-3">
-            <label for="dob" class="form-label">BirthDate</label>
-            <input type="date" class="form-control" id="dob" required />
-         </div>
-         <div class="mb-3">
-            <label for="city" class="form-label">City</label>
-            <input
-               type="text"
-               class="form-control"
-               id="city"
-               placeholder="Enter City"
-               required
-            />
-         </div>
-         <div class="mb-3">
-            <label for="state" class="form-label">State</label>
-            <input
-               type="text"
-               class="form-control"
-               id="state"
-               placeholder="Enter State"
-               required
-            />
-         </div>
-         <div class="mb-3">
-            <label for="email" class="form-label">Email Address</label>
-            <input
-               type="email"
-               class="form-control"
-               id="email"
-               placeholder="Enter Email Address"
-               required
-            />
-         </div>
-         <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input
-               type="password"
-               class="form-control"
-               id="password"
-               placeholder="Enter Password"
-               required
-            />
-         </div>
-         <button type="submit" class="btn btn-primary">Sign Up</button>
-      </form>
-      <script src="../scripts/signup.js"></script>
-   </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Candidate SignUp</title>
+    </head>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../styles/signupStyle.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet" />
+    <body>
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="Enter Your First Name" required />
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Enter Your Last Name" required />
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">BirthDate</label>
+                <input type="date" class="form-control" id="dob" required />
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" placeholder="Enter City" required />
+            </div>
+            <div class="mb-3">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" placeholder="Enter State" required />
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter Email Address" required />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Enter Password"
+                    required
+                    minlength="8"
+                />
+                <div class="mb-3">
+                    <label for="passwordConfirm" class="form-label">Confirm Password</label>
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="passwordConfirm"
+                        placeholder="Enter password again"
+                        required
+                        minlength="8"
+                    />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+            <a class="btn btn-primary" href="./signin.html">Sign In</a>
+            <a class="btn btn-primary" href="../index.html">Cancel</a>
+        </form>
+        <script src="../scripts/signup.js"></script>
+    </body>
 </html>

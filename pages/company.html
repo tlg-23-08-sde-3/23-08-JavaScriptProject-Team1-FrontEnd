@@ -53,15 +53,17 @@
             </nav>
         </header>
         <div id="mainView">
-            <div class="job-posts row">
-                <section id="company-view-container" class="container col-3">
-                    <div class="container p-3" id="companyDisplay"></div>
-                    <div class="container justify-content-center p-3">
-                        <a href="./JobForm.html" class="btn btn-primary" id="createJobBtn">Create Job</a>
+            <div class="job-posts row justify-content-center">
+                <section id="company-view-container" class="container col-3 company-view-container">
+                    <div class="card">
+                        <div class="container" id="companyDisplay"></div>
+                        <div class="container">
+                            <a href="./JobForm.html" class="btn btn-primary" id="createJobBtn">Create Job</a>
+                        </div>
                     </div>
                 </section>
-                <section id="jobs-list-container" class="container col-5"></section>
-                <section id="job-detail-container" class="container col-4"></section>
+                <section id="jobs-list-container" class="container col-4"></section>
+                <section id="job-detail-container" class="container col-3"></section>
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center"></ul>
@@ -84,6 +86,6 @@
             crossorigin="anonymous"
         ></script>
         <script src="../scripts/company.js"></script>
-        <script src="../scripts/signout.js"></script>
+        <script src="../scripts/pageSignout.js"></script>
     </body>
 </html>
