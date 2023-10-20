@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 const companyId = localStorage.getItem("companyId");
 const token = localStorage.getItem("token");

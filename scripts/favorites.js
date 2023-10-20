@@ -1,5 +1,5 @@
-//const baseAPI = "https://employmentdecoderapi.onrender.com/";
-const baseAPI = "http://localhost:3000/";
+const baseAPI = "https://employmentdecoderapi.onrender.com/";
+//const baseAPI = "http://localhost:3000/";
 
 const apiUrl = baseAPI + "job";
 
@@ -10,6 +10,8 @@ const signupLink = document.getElementById("signup-link");
 const email = localStorage.getItem("candidate");
 const token = localStorage.getItem("token");
 const id = localStorage.getItem("candidateId");
+
+const DateTime = luxon.DateTime;
 
 async function fetchJobs() {
     let jobs = null;
@@ -158,6 +160,8 @@ async function displayFirstJobDetails(id) {
     <h5>${job.name}</h5>
     <p>${job.location}</p>
     <p>${job.pay}</p>
+    <p>Created: ${DateTime.fromISO(job.created_at).toLocaleString(DateTime.DATETIME_MED)}</p>
+    <p>Updated: ${DateTime.fromISO(job.updatedAt).toLocaleString(DateTime.DATETIME_MED)}</p>
     <hr />
     <p>${job.contents}</p>
        <button type="button" class="btn btn-primary applyBtn" >Apply</button> 
@@ -168,36 +172,34 @@ async function displayFirstJobDetails(id) {
 }
 
 jobsListContainer.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-   e.preventDefault();
+    if (e.target.tagName === "IMG") {
+        console.log(e.target.parentNode.id.split("-")[2]);
+        console.log(localStorage.getItem("candidate"));
 
-   if (e.target.tagName === "IMG") {
-      console.log(e.target.parentNode.id.split("-")[2]);
-      console.log(localStorage.getItem("candidate"));
+        const jobId = e.target.parentNode.id.split("-")[2];
+        const email = localStorage.getItem("candidate");
+        const token = localStorage.getItem("token");
 
-      const jobId = e.target.parentNode.id.split("-")[2];
-      const email = localStorage.getItem("candidate");
-      const token = localStorage.getItem("token");
-
-      if (email && jobId) {
-         // ---------------------------------------------------remove favorites-----------------------------------------------------------
-         fetch("http://localhost:3000/candidate/favorites/remove", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-               Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ email, jobId }),
-         })
-            .then((response) => {
-               if (response.ok) {
-                  alert("Job removed from favorites list!");
-                  location.reload();
-               } else {
-                  alert("Error: Action can not be completed!");
-               }
-
+        if (email && jobId) {
+            // ---------------------------------------------------remove favorites-----------------------------------------------------------
+            fetch("http://localhost:3000/candidate/favorites/remove", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ email, jobId }),
             })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("Job removed from favorites list!");
+                        location.reload();
+                    } else {
+                        alert("Error: Action can not be completed!");
+                    }
+                })
                 .then((response) => {
                     if (response.ok) {
                         alert("Job removed from favorites list!");
@@ -236,6 +238,8 @@ jobsListContainer.addEventListener("click", async (e) => {
     <h5>${job.name}</h5>
     <p>${job.location}</p>
     <p>${job.pay}</p>
+    <p>Created: ${DateTime.fromISO(job.created_at).toLocaleString(DateTime.DATETIME_MED)}</p>
+    <p>Updated: ${DateTime.fromISO(job.updatedAt).toLocaleString(DateTime.DATETIME_MED)}</p>
     <hr />
     <p>${job.contents}</p>
         <button type="button" class="btn btn-primary applyBtn">Apply</button>
