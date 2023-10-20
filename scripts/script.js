@@ -311,7 +311,7 @@ document
 
       //       <p><b>Salary: </b>${job.pay}</p>
       //       <p>Created: ${job.created_at}</p>
-         <p>Updated: ${job.updatedAt}</p>
+         // <p>Updated: ${job.updatedAt}</p> ----------------------------------------------------------------------------------------
       //       <p><b>Job Description: </b>${slicedJobDescription}</p>
       //    `;
 
