@@ -172,6 +172,7 @@ jobsListContainer.addEventListener("click", async (e) => {
       const token = localStorage.getItem("token");
 
       if (email && jobId) {
+         // ---------------------------------------------------remove favorites-----------------------------------------------------------
          fetch("http://localhost:3000/candidate/favorites/remove", {
             method: "POST",
             headers: {
