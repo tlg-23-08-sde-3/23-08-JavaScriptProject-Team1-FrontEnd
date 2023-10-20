@@ -17,11 +17,11 @@
         <form id="companySignUpForm">
             <div class="mb-3">
                 <label for="name" class="form-label">Company Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter Company Name" />
+                <input type="text" class="form-control" id="name" placeholder="Enter Company Name" required />
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Company Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter Company Email" />
+                <input type="email" class="form-control" id="email" placeholder="Enter Company Email" required />
             </div>
             <div class="mb-3">
                 <label for="locations" class="form-label">Primary Location</label>
@@ -29,11 +29,25 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter Password" />
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Enter Password"
+                    required
+                    minlength="8"
+                />
             </div>
             <div class="mb-3">
                 <label for="passwordConfirm" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="passwordConfirm" placeholder="Enter password again" />
+                <input
+                    type="password"
+                    class="form-control"
+                    id="passwordConfirm"
+                    placeholder="Enter password again"
+                    required
+                    minlength="8"
+                />
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Create Account</button>

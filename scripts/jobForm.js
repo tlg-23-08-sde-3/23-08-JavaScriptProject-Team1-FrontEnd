@@ -1,8 +1,8 @@
 //const baseAPI = "https://employmentdecoderapi.onrender.com/";
 const baseAPI = "http://localhost:3000/";
-const extURL = "job";
 
 const companyId = localStorage.getItem("companyId");
+const token = localStorage.getItem("token");
 
 document.getElementById("jobCreateForm").addEventListener("submit", (event) => {
     event.preventDefault(); // Prevent the default form submission
@@ -28,10 +28,11 @@ document.getElementById("jobCreateForm").addEventListener("submit", (event) => {
 
     jobData["companyId"] = companyId;
 
-    fetch(baseAPI + extURL, {
+    fetch(baseAPI + "job", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(jobData),
     })

@@ -2,7 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Nunito', sans-serif;
+    font-family: "Nunito", sans-serif;
 }
 
 body {
@@ -13,10 +13,19 @@ body {
     background-color: #3e5c76;
 }
 
+.navbar {
+    margin-bottom: 30px;
+}
+
+.nav-list {
+    margin: 0 auto;
+    font-weight: bold;
+}
+
 .job-posts {
     display: flex;
     justify-content: center;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
 
 .card {
@@ -26,24 +35,23 @@ body {
 
 .jobs-view-conainer {
     position: fixed;
-    
-    right: 150px; 
+
+    right: 150px;
     /* scrolling */
-    height: 100%; 
-    overflow-y: auto; 
-    
-  }
+    height: 100%;
+    overflow-y: auto;
+}
 
-  .jobs-view-conainer .card {
+.jobs-view-conainer .card {
     padding: 30px;
-  }
+}
 
-  h1 {
+h1 {
     margin-bottom: 20px;
     margin-top: 20px;
     color: white;
-  }
+}
 
 .fav-img:hover {
     cursor: pointer;
-    }
+}

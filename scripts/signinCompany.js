@@ -27,12 +27,8 @@ document.getElementById("signInCompanyForm").addEventListener("submit", (event) 
             localStorage.setItem("token", data.token);
             localStorage.setItem("companyId", data._id);
             localStorage.setItem("companyEmail", data.email);
-
-            // document.getElementById("keywords-search-input").innerText =
-            //    "Logged In";
         })
         .catch((error) => {
             console.error(error);
         });
-    //   TODO: Add a banner for successfuly sign up and change signup to firstname + lastname
 });

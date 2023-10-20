@@ -1,7 +1,5 @@
 //const baseAPI = "https://employmentdecoderapi.onrender.com/";
 const baseAPI = "http://localhost:3000/";
-const jobURLExt = "job";
-const compURLExt = "company/email/";
 
 const companyViewContainer = document.getElementById("company-view-container");
 const jobsListContainer = document.getElementById("jobs-list-container");
@@ -14,11 +12,11 @@ const companyId = localStorage.getItem("companyId");
 const companyEmail = localStorage.getItem("companyEmail");
 const token = localStorage.getItem("token");
 
-if (!token) {
+if (!token || !companyId || !companyEmail) {
     location.assign("./signinCompany.html");
 } else {
     async function fetchCompany() {
-        const fullCompanyURL = baseAPI + compURLExt + companyEmail;
+        const fullCompanyURL = baseAPI + "company/email/" + companyEmail;
         const fetchedCompany = await fetch(fullCompanyURL);
         const company = await fetchedCompany.json();
 
@@ -163,6 +161,9 @@ if (!token) {
    <p>Location: ${job.location}</p>
    <h6>Description</h6>
    <p>${job.contents}</p>
+   <hr>
+   <p>Applicants</p>
+   <p>${job.applicants}</p>
    `;
         jobViewContainer.innerHTML = "";
         jobViewContainer.appendChild(singleJobView);
@@ -173,7 +174,7 @@ if (!token) {
 
         const target = e.target.closest(".card");
 
-        const fetchedJobs = await fetch(baseAPI + jobURLExt);
+        const fetchedJobs = await fetch(baseAPI + "job");
         const data = await fetchedJobs.json();
         const jobs = data;
 
@@ -191,6 +192,9 @@ if (!token) {
     <h6>Description</h6>
     <p>${job.contents}</p>
     <p>Location: ${job.location}</p>
+    <hr>
+   <p>Applicants</p>
+   <p>${job.applicants}</p>
 
    `;
         jobViewContainer.innerHTML = "";
@@ -202,14 +206,16 @@ if (!token) {
 
     if (companyEmail && companyId) {
         companySignin.innerText = companyEmail;
+        companySignin.removeAttribute("href");
 
         companySignup.innerHTML = ``;
+        companySignup.removeAttribute("href");
 
         const signOutElement = document.createElement("li");
         signOutElement.classList.add("nav-item");
         signOutElement.id = "compSignoutLink";
         signOutElement.innerHTML = `
-    <a class="nav-link active" aria-current="page" id="signup-link" onclick="signout()">Sign Out</a>
+    <a class="nav-link active" aria-current="page" onclick="signout()">Sign Out</a>
     `;
         document.getElementById("companyNavBar").append(signOutElement);
     }
